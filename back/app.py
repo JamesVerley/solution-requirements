@@ -1,37 +1,15 @@
 import os
 import sqlite3
 from flask import Flask, jsonify, request
+from sqlconnector import *
 
 
 app = Flask(__name__)
 
-# if os.path.exists('data.db'):
-#     os.remove('data.db')
+if os.path.exists('data.db'):
+    os.remove('data.db')
 
 dbconn = sqlite3.connect('data.db')
-
-
-sql_create_students_table = """ 
-    CREATE TABLE IF NOT EXISTS students (
-        student_id      integer     PRIMARY KEY,
-        student_name    text(50),
-        student_age     integer,
-        student_class   TEXT(50)    DEFAULT 'A'); 
-"""
-
-
-sql_create_students_entry = """ 
-    INSERT INTO students (
-        student_name,
-        student_age,
-        student_class 
-    ) VALUES (?, ?, ?); 
-"""
-
-sql_get_students_entry = """ 
-    SELECT * FROM students; 
-"""
-
 
 def create_table(conn, create_table_sql):
     try:
@@ -45,12 +23,17 @@ def create_table(conn, create_table_sql):
 def addStudent(conn, create_student_sql):
     try:
         c = conn.cursor()
-        c.execute(create_student_sql, (1, "Tom", 13, "A"))
+        c.execute(create_student_sql, ("s001", "Bob", "Doe", "01/04/2000", "M", "1"))
         conn.commit()
         c.close()
     except sqlite3.Error as e:
         print(e)
 
+if dbconn is not None:
+    create_table(dbconn, sql_create_students_table)
+    addStudent(dbconn, sql_create_students_entry)
+else:
+    print("Error! cannot create the database connection.")
 
 def getStudent():
     students = []
@@ -63,9 +46,12 @@ def getStudent():
             for row in records:
                 student = {}
                 student["id"] = row[0]
-                student["name"] = row[1]
-                student["age"] = row[2]
-                student["class"] = row[3]
+                student["student_number"] = row[1]
+                student["first_name"] = row[2]
+                student["last_name"] = row[3]
+                student["birthday"] = row[4]
+                student["gender"] = row[5]
+                student["year_group_id"] = row[6]
                 students.append(student)
             c.close()
             return students
@@ -73,19 +59,11 @@ def getStudent():
             print(e)
 
 
-if dbconn is not None:
-    create_table(dbconn, sql_create_students_table)
-    addStudent(dbconn, sql_create_students_entry)
-
-else:
-    print("Error! cannot create the database connection.")
-
-
-def new_student(name, age, classname):
+def new_student(studentNum, firstName, lastName, dob, gender, yearGroupId):
     with sqlite3.connect('data.db') as dbconn_local:
         try:
             c = dbconn_local.cursor()
-            c.execute(sql_create_students_entry, (name, age, classname))
+            c.execute(sql_create_students_entry, (studentNum, firstName, lastName, dob, gender, yearGroupId))
             dbconn_local.commit()
             c.close()
         except sqlite3.Error as e:
@@ -97,11 +75,86 @@ def get_tasks():
     return jsonify({'students': getStudent()})
 
 
-@app.route('/add_student_record', methods=['POST'])
-def add_student_record():
+@app.route('/addstudent', methods=['POST'])
+def add_student():
     content = request.get_json()
-    new_student(content['name'], content['age'], content['class'])
+    new_student(content['student_num'], content['first_name'], content['last_name'], content['birthday'], content['gender'], content['year_group_id'])
     return jsonify(content)
+
+
+@app.route('/addclass', methods=['POST'])
+def add_class():
+    return
+
+@app.route('/addsubject', methods=['POST'])
+def add_subject():
+    return
+
+@app.route('/addteacher', methods=['POST'])
+def add_teacher():
+    return
+
+@app.route('/addyeargroup', methods=['POST'])
+def add_yeargroup():
+    return
+
+@app.route('/markstudent', methods=['POST'])
+def mark_student():
+    return
+
+sampleStudent = {
+  "id": 1,
+  "student_num": "s001",
+  "first_name": "Bob",
+  "last_name": "Doe",
+  "birthday": "01/04/2000",
+  "gender": "m",
+  "year_group_id": "1",
+}
+
+sampleYearGroup = {
+  "id": 1,
+  "year_run": "2018",
+  "year_level": "12"
+}
+
+@app.route('/sample/student', methods=['GET'])
+def get_samplestudent():
+    return jsonify({'student': sampleStudent})
+
+@app.route('/sample/yeargroup', methods=['GET'])
+def get_sampleyeargroup():
+    return jsonify({'yeargroup': sampleYearGroup})
+
+# ====================================
+#  Get and Return All Students in School
+
+# ====================================
+#  Get and Return All Students by Year Group
+
+# ====================================
+#  Get and Return All Students by Subject
+
+# ====================================
+#  Get and Return Student by Student Number
+
+# ====================================
+#  Get and Return Student by Student id
+
+# ====================================
+#  Get and Return All Year Groups
+
+# ====================================
+#  Get and Return All Subjects
+
+# ====================================
+#  Enrol Student to School
+
+# ====================================
+#  Enrol Student to Year Group
+
+# ====================================
+#  Enrol Student to Subject
 
 
 if __name__ == '__main__':
