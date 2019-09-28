@@ -1,2 +1,2 @@
 # solution-requirements
-analysis and planning material for the student marking helper solution
+Analysis and planning material for the student marking helper solution
