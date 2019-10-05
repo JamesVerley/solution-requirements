@@ -1,0 +1,3 @@
+-renamed category to auxiliary, renamed description to data_type, added a description field for teachers to provide documentation to criteria they create
+-combined measure and criteria tables into 1, as measure appears to have an exclusive 1 to 1 relationship with criteria
+-subject_periods added, fk in session. the idea is for each subject to have a weekly schedule
