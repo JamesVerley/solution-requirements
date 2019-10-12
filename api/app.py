@@ -6,8 +6,8 @@ from sqlconnector import *
 
 app = Flask(__name__)
 
-if os.path.exists('data.db'):
-    os.remove('data.db')
+# if os.path.exists('data.db'):
+#     os.remove('data.db')
 
 dbconn = sqlite3.connect('data.db')
 
@@ -81,6 +81,26 @@ def add_student():
     new_student(content['student_num'], content['first_name'], content['last_name'], content['birthday'], content['gender'], content['year_group_id'])
     return jsonify(content)
 
+def getsubjectperiodbysubject_id(subject_id):
+    periods = []
+    with sqlite3.connect('data.db') as dbconn_local:
+        try:
+            c = dbconn_local.cursor()
+            c.execute(sql_get_subject_periods_by_subject_id, (subject_id))
+            records = c.fetchall()
+
+            for row in records:
+                period = {}
+                period["id"] = row[0]
+                period["start_time"] = row[1]
+                period["end_time"] = row[2]
+                period["day"] = row[3]
+                period["subject_id"] = row[4]
+                periods.append(period)
+            c.close()
+            return periods
+        except sqlite3.Error as e:
+            print(e)
 
 @app.route('/addclass', methods=['POST'])
 def add_class():
@@ -101,6 +121,18 @@ def add_yeargroup():
 @app.route('/markstudent', methods=['POST'])
 def mark_student():
     return
+
+def getSubjectById():
+    return
+
+def getPeriodsBySubjetId():
+    return
+
+@app.route('/getsubjectperiodsbysubject_id', methods=['GET'])
+def getsubjectperiodsbysubject_id():
+    subject_id = request.args.get('subject_id')
+    records = getsubjectperiodbysubject_id(subject_id)
+    return jsonify({"periods": records})
 
 sampleStudent = {
   "id": 1,

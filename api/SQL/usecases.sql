@@ -2,7 +2,10 @@
 
 -- teacher able to get all:
     -- the subject_periods given a particular subject
+    SELECT * FROM "subject_periods" WHERE subject_id = ?;
+
     -- subjects they are assigned to
+    
     -- subjects for a particular year level
     -- criteria for a particular subject
     -- sessions taught so far
@@ -19,3 +22,4 @@
     -- grade records
     -- year level records
     -- student records
+

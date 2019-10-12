@@ -42,3 +42,6 @@ sql_get_students_entry = """
     SELECT * FROM students; 
 """
 
+sql_get_subject_periods_by_subject_id = """
+SELECT * FROM "subject_periods" WHERE subject_id = ?;
+"""
