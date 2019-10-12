@@ -4,20 +4,34 @@ REST API implemented using Python, Flask and SQLite, allowing users to query and
 
 **Instructions**
 
-- Install pipenv
+**Dependency: **
 
-  ```pip install pipenv```
+- Install pipenv (ensure that you are in the `API` directory)
+
+  `pip install pipenv`
 
 - Set up virtual environment
 
-  ```pipenv install```
-  
+  `pipenv install`
+
 - Activate environment
 
-  ```pipenv shell```
-  
+  `pipenv shell`
+
 - Run Application
 
-  ```python app.py```
+  `python app.py`
 
 URL [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+---
+
+**Test API End Points**
+
+`http://127.0.0.1:5000/getallstudents`
+
+`http://127.0.0.1:5000/getstudents/usingyeargroup`
+
+`http://127.0.0.1:5000/getstudents/usingsubject`
+
+`http://127.0.0.1:5000/getstudent/?id=1`
