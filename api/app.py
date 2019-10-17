@@ -31,12 +31,22 @@ def create_table(conn, create_table_sql):
 # SQL Connector - 1. Student
 # ==========================================
 
+def generalDBHandler(sqlScript, variableData):
+    with sqlite3.connect('data.db') as dbconn_local:
+        try:
+            c = dbconn_local.cursor()
+            c.execute(sqlScript, variableData)
+            records = c.fetchall()
+            return jsonify(records)
+        except sqlite3.Error as e:
+            print(e)
+
 def studentDBHandler(sqlScript, variableData=[]):
     students = []
     with sqlite3.connect('data.db') as dbconn_local:
         try:
             c = dbconn_local.cursor()
-            c.execute(sqlScript, (*variableData))
+            c.execute(sqlScript, variableData)
             records = c.fetchall()
 
             for row in records:
@@ -71,8 +81,29 @@ sql_get_student_by_id = """
 @app.route('/get-student-by-id', methods=['GET'])
 def getStudentById():
     studentId = request.args.get('id')
-    return studentDBHandler(sql_get_student_by_id, studentId)
+    return studentDBHandler(sql_get_student_by_id, [studentId])
 
+# 1.3 Students - Get Student By Subject Code
+
+sql_get_student_by_subject_code = """ 
+SELECT
+	student.student_number,
+	student.first_name,
+	student.last_name,
+	student.gender,
+	student.birthday,
+	subject.subject_code,
+	subject.subject_name
+from enrolment
+INNER join subject on enrolment.subject_id = subject.id
+INNER join registration on enrolment.registration_id = registration.id
+INNER join student on registration.student_id = student.id
+WHERE subject_code=?;
+""" 
+@app.route('/get-student-by-subject-code', methods=['GET'])
+def getStudentBySubjectCode():
+    subjectCode = request.args.get('code')
+    return studentDBHandler(sql_get_student_by_subject_code, [subjectCode])
 
 
 # ==========================================
