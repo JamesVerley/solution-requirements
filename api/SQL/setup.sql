@@ -149,15 +149,10 @@ INSERT INTO "criterion"("id", "allocation_id", "datatype", "name", "description"
 -- ======================
 -- session
 -- ======================
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'19/2/2019',4, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'26/2/2019',5, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'5/3/2019',6, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'12/3/2019',7, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'19/3/2019',8, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'26/3/2019',9, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'2/4/2019',10, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'9/4/2019',11, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'16/4/2019',12, 1);
+INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'19/2/2019',1, 1);
+INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'26/2/2019',2, 1);
+INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'5/3/2019',3, 1);
+INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'12/3/2019',4, 1);
 -- ======================
 -- student
 -- ======================
