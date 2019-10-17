@@ -7,7 +7,6 @@ from flask import Flask, jsonify, request
 # from sqlconnector import *
 from flask_cors import CORS
 
-
 # ==========================================
 # Set Up
 # ==========================================
@@ -103,7 +102,7 @@ WHERE subject_code=?;
 @app.route('/get-student-by-subject-code', methods=['GET'])
 def getStudentBySubjectCode():
     subjectCode = request.args.get('code')
-    return studentDBHandler(sql_get_student_by_subject_code, [subjectCode])
+    return generalDBHandler(sql_get_student_by_subject_code, [subjectCode])
 
 
 # ==========================================
