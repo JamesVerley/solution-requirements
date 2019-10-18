@@ -1,15 +1,6 @@
--- DROP TABLE "grade";
--- DROP TABLE "session";
--- DROP TABLE "subject_periods";
--- DROP TABLE "allocation";
--- DROP TABLE "teacher";
--- DROP TABLE "enrolment";
--- DROP TABLE "subject";
--- DROP TABLE "registration";
--- DROP TABLE "level";
--- DROP TABLE "student";
--- DROP TABLE "criterion";
+import sqlite3
 
+sql_setup_db = """
 CREATE TABLE "teacher" (
 "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ON CONFLICT ROLLBACK,
 "teacher_first_name" TEXT NOT NULL,
@@ -157,7 +148,7 @@ INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES
 -- student
 -- ======================
 INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('1', 'Christi', 'Bella', '12/1/2000', 'F');
-INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('2', 'Bob', 'Klar', '12/1/2000', 'F');
+INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('2', 'Bob', 'Klar', '12/1/2000', 'M');
 INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('3', 'Christi', 'Bella', '12/1/2000', 'F');
 INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('4', 'Mark', 'Credo', '1/3/2000', "M");
 -- ======================
@@ -226,3 +217,16 @@ INSERT INTO "grade"("id", "enrolment_id", "session_id", "criteria_id", "grade") 
 INSERT INTO "grade"("id", "enrolment_id", "session_id", "criteria_id", "grade") VALUES (2, 1, 1, 2, "YES");
 INSERT INTO "grade"("id", "enrolment_id", "session_id", "criteria_id", "grade") VALUES (3, 3, 1, 1, "80");
 INSERT INTO "grade"("id", "enrolment_id", "session_id", "criteria_id", "grade") VALUES (4, 3, 1, 2, "YES");
+
+"""
+
+
+def setupSQLiteDB():
+    try:
+        dbconn = sqlite3.connect('data.db')
+        c = dbconn.cursor()
+        c.executescript(sql_setup_db)
+        dbconn.commit()
+        dbconn.close()
+    except sqlite3.Error as e:
+        print(e)

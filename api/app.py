@@ -4,8 +4,8 @@
 import os
 import sqlite3
 from flask import Flask, jsonify, request
-# from sqlconnector import *
 from flask_cors import CORS
+import dbSetup
 
 # ==========================================
 # Set Up
@@ -13,18 +13,13 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+# ==========================================
+# Uncomment the follow code to reset data.db
+# ==========================================
+
 # if os.path.exists('data.db'):
 #     os.remove('data.db')
-
-dbconn = sqlite3.connect('data.db')
-
-def create_table(conn, create_table_sql):
-    try:
-        c = conn.cursor()
-        c.execute(create_table_sql)
-        c.close()
-    except sqlite3.Error as e:
-        print(e)
+#     dbSetup.setupSQLiteDB()
 
 # ==========================================
 # SQL Connector - 1. Student
@@ -95,191 +90,81 @@ def getStudentBySubjectCode():
     labels = ["studentNumber", "firstName", "lastName", "gender", "birthday", "subjectCode", "subjectName"]
     return JsonifyQueryRecords(sql_get_student_by_subject_code, labels, [subjectCode])
 
-# 1.4 Student 
-
-
 # ==========================================
-# SQL Connector - 2. 
+# Step to grade students
+# 1. Teacher query sessions info based on subject code, day, and teacher id
+# 2. Query all students and relevant grade info based on session id
+# 3. Grades are updated to DB
 # ==========================================
 
+sql_get_session_by_subjectcode_day_teacherid = """ 
+select 
+	subject.subject_code,
+	subject.subject_name,
+	subject_periods.day,
+	subject_periods.start_time,
+	subject_periods.end_time
+from 
+	session
+	INNER JOIN subject_periods on session.period_id = subject_periods.id
+	INNER JOIN subject on subject_periods.subject_id = subject.id
+WHERE
+	subject_code = "ENG101" AND
+	day = "Monday"
+;
+""" 
 
-# ==========================================
-# Demo Code
-# ==========================================
-# def addStudent(conn, create_student_sql):
-#     try:
-#         c = conn.cursor()
-#         c.execute(create_student_sql, ("s001", "Bob", "Doe", "01/04/2000", "M", "1"))
-#         conn.commit()
-#         c.close()
-#     except sqlite3.Error as e:
-#         print(e)
+sql_get_session_full_table = """
+select 
+	student.student_number,
+	student.first_name,
+	student.last_name,
+	student.gender,
+	subject.subject_code,
+	subject.subject_name,
+	subject_periods.day,
+	subject_periods.start_time,
+	subject_periods.end_time,
+    session.session_date
+from 
+	session
+	INNER JOIN subject_periods on session.period_id = subject_periods.id
+	INNER JOIN subject on subject_periods.subject_id = subject.id
+	INNER JOIN enrolment on enrolment.subject_id = subject.id
+	INNER JOIN registration on enrolment.registration_id = registration.id
+	INNER JOIN student on registration.student_id = student.id
+WHERE
+	subject_code = "ENG101" AND
+	day = "Monday" AND
+	session_date = "19/2/2019"
+;
+"""
 
-# if dbconn is not None:
-#     create_table(dbconn, sql_create_students_table)
-#     addStudent(dbconn, sql_create_students_entry)
-# else:
-#     print("Error! cannot create the database connection.")
-
-# def getStudent():
-#     students = []
-#     with sqlite3.connect('data.db') as dbconn_local:
-#         try:
-#             c = dbconn_local.cursor()
-#             c.execute(sql_get_students_entry)
-#             records = c.fetchall()
-
-#             for row in records:
-#                 student = {}
-#                 student["id"] = row[0]
-#                 student["student_number"] = row[1]
-#                 student["first_name"] = row[2]
-#                 student["last_name"] = row[3]
-#                 student["birthday"] = row[4]
-#                 student["gender"] = row[5]
-#                 student["year_group_id"] = row[6]
-#                 students.append(student)
-#             c.close()
-#             return students
-#         except sqlite3.Error as e:
-#             print(e)
-
-
-# def new_student(studentNum, firstName, lastName, dob, gender, yearGroupId):
-#     with sqlite3.connect('data.db') as dbconn_local:
-#         try:
-#             c = dbconn_local.cursor()
-#             c.execute(sql_create_students_entry, (studentNum, firstName, lastName, dob, gender, yearGroupId))
-#             dbconn_local.commit()
-#             c.close()
-#         except sqlite3.Error as e:
-#             print(e)
-
-
-# @app.route('/', methods=['GET'])
-# def get_tasks():
-#     return jsonify({'students': getStudent()})
-
-
-# @app.route('/addstudent', methods=['POST'])
-# def add_student():
-#     content = request.get_json()
-#     new_student(content['student_num'], content['first_name'], content['last_name'], content['birthday'], content['gender'], content['year_group_id'])
-#     return jsonify(content)
-
-# def getsubjectperiodbysubject_id(subject_id):
-#     periods = []
-#     with sqlite3.connect('data.db') as dbconn_local:
-#         try:
-#             c = dbconn_local.cursor()
-#             c.execute(sql_get_subject_periods_by_subject_id, (subject_id))
-#             records = c.fetchall()
-
-#             for row in records:
-#                 period = {}
-#                 period["id"] = row[0]
-#                 period["start_time"] = row[1]
-#                 period["end_time"] = row[2]
-#                 period["day"] = row[3]
-#                 period["subject_id"] = row[4]
-#                 periods.append(period)
-#             c.close()
-#             return periods
-#         except sqlite3.Error as e:
-#             print(e)
-
-# @app.route('/addclass', methods=['POST'])
-# def add_class():
-#     return
-
-# @app.route('/addsubject', methods=['POST'])
-# def add_subject():
-#     return
-
-# @app.route('/addteacher', methods=['POST'])
-# def add_teacher():
-#     return
-
-# @app.route('/addyeargroup', methods=['POST'])
-# def add_yeargroup():
-#     return
-
-# @app.route('/markstudent', methods=['POST'])
-# def mark_student():
-#     return
-
-# def getSubjectById():
-#     return
-
-# def getPeriodsBySubjetId():
-#     return
-
-# @app.route('/getsubjectperiodsbysubject_id', methods=['GET'])
-# def getsubjectperiodsbysubject_id():
-#     subject_id = request.args.get('subject_id')
-#     records = getsubjectperiodbysubject_id(subject_id)
-#     return jsonify({"periods": records})
-
-# sampleStudent = {
-#   "id": 1,
-#   "student_num": "s001",
-#   "first_name": "Bob",
-#   "last_name": "Doe",
-#   "birthday": "01/04/2000",
-#   "gender": "m",
-#   "year_group_id": "1",
-# }
-
-# sampleYearGroup = {
-#   "id": 1,
-#   "year_run": "2018",
-#   "year_level": "12"
-# }
-
-# @app.route('/sample/student', methods=['GET'])
-# def get_samplestudent():
-#     return jsonify({'student': sampleStudent})
-
-# @app.route('/sample/yeargroup', methods=['GET'])
-# def get_sampleyeargroup():
-#     return jsonify({'yeargroup': sampleYearGroup})
-
-# ====================================
-#  Get and Return All Students in School
-
-# ====================================
-#  Get and Return All Students by Year Group
-
-# ====================================
-#  Get and Return All Students by Subject
-
-# ====================================
-#  Get and Return Student by Student Number
-
-# ====================================
-#  Get and Return Student by Student id
-
-# ====================================
-#  Get and Return All Year Groups
-
-# ====================================
-#  Get and Return All Subjects
-
-# ====================================
-#  Enrol Student to School
-
-# ====================================
-#  Enrol Student to Year Group
-
-# ====================================
-#  Enrol Student to Subject
-
-
-
-
-
-
-
+sql_test = """ 
+select 
+	student.student_number,
+	student.first_name,
+	student.last_name,
+	subject.subject_code,
+	session.session_date,
+	criterion.name,
+	grade.grade
+from 
+	session
+	INNER JOIN subject_periods on session.period_id = subject_periods.id
+	INNER JOIN subject on subject_periods.subject_id = subject.id
+	INNER JOIN enrolment on enrolment.subject_id = subject.id
+	INNER JOIN registration on enrolment.registration_id = registration.id
+	INNER JOIN student on registration.student_id = student.id
+	INNER JOIN grade on session.id = grade.session_id AND grade.enrolment_id = enrolment.id
+	INNER JOIN criterion on grade.criteria_id = criterion.id
+WHERE
+	subject_code = "ENG101" AND
+	day = "Monday" AND
+	session_date = "19/2/2019"
+ORDER BY student.student_number
+;
+"""
 
 if __name__ == '__main__':
     app.run(debug=True)
