@@ -167,5 +167,13 @@ ORDER BY student.student_number
 ;
 """
 
+@app.route('/', methods=['GET'])
+def getHomePage():
+    return jsonify({"message":"ok"})
+
+@app.route('/<path:path>')
+def catch_all(path):
+    return jsonify({"message":"path not found"})
+
 if __name__ == '__main__':
     app.run(debug=True)
