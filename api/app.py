@@ -16,10 +16,11 @@ CORS(app)
 # ==========================================
 # Uncomment the follow code to reset data.db
 # ==========================================
+if os.path.exists('data.db'):
+    os.remove('data.db')
+    dbSetup.setupSQLiteDB()
 
-# if os.path.exists('data.db'):
-#     os.remove('data.db')
-#     dbSetup.setupSQLiteDB()
+sqlite3.connect('data.db')
 
 # ==========================================
 # SQL Connector - 1. Student
@@ -78,7 +79,7 @@ SELECT
 	student.birthday,
 	subject.subject_code,
 	subject.subject_name
-from enrolment
+FROM enrolment
 INNER join subject on enrolment.subject_id = subject.id
 INNER join registration on enrolment.registration_id = registration.id
 INNER join student on registration.student_id = student.id
@@ -98,13 +99,13 @@ def getStudentBySubjectCode():
 # ==========================================
 
 sql_get_session_by_subjectcode_day_teacherid = """ 
-select 
+SELECT 
 	subject.subject_code,
 	subject.subject_name,
 	subject_periods.day,
 	subject_periods.start_time,
 	subject_periods.end_time
-from 
+FROM 
 	session
 	INNER JOIN subject_periods on session.period_id = subject_periods.id
 	INNER JOIN subject on subject_periods.subject_id = subject.id
@@ -115,7 +116,7 @@ WHERE
 """ 
 
 sql_get_session_full_table = """
-select 
+SELECT 
 	student.student_number,
 	student.first_name,
 	student.last_name,
@@ -126,7 +127,7 @@ select
 	subject_periods.start_time,
 	subject_periods.end_time,
     session.session_date
-from 
+FROM 
 	session
 	INNER JOIN subject_periods on session.period_id = subject_periods.id
 	INNER JOIN subject on subject_periods.subject_id = subject.id
@@ -141,7 +142,7 @@ WHERE
 """
 
 sql_test = """ 
-select 
+SELECT 
 	student.student_number,
 	student.first_name,
 	student.last_name,
@@ -149,7 +150,7 @@ select
 	session.session_date,
 	criterion.name,
 	grade.grade
-from 
+FROM 
 	session
 	INNER JOIN subject_periods on session.period_id = subject_periods.id
 	INNER JOIN subject on subject_periods.subject_id = subject.id
