@@ -30,7 +30,7 @@ def create_table(conn, create_table_sql):
 # SQL Connector - 1. Student
 # ==========================================
 
-def studentDBHandler(sqlScript, labels, variableData=[]):
+def JsonifyQueryRecords(sqlScript, labels, variableData=[]):
     students = []
     with sqlite3.connect('data.db') as dbconn_local:
         try:
@@ -59,7 +59,7 @@ sql_get_all_students = """
 @app.route('/get-all-students', methods=['GET'])
 def getAllStudents():
     labels = ["id", "student_number", "first_name", "last_name", "birthday", "gender"]
-    return studentDBHandler(sql_get_all_students, labels)
+    return JsonifyQueryRecords(sql_get_all_students, labels)
 
 # 1.2 Students - Get Student By ID
 
@@ -70,7 +70,7 @@ sql_get_student_by_id = """
 def getStudentById():
     studentId = request.args.get('id')
     labels = ["id", "student_number", "first_name", "last_name", "birthday", "gender"]
-    return studentDBHandler(sql_get_student_by_id, labels, [studentId])
+    return JsonifyQueryRecords(sql_get_student_by_id, labels, [studentId])
 
 # 1.3 Students - Get Student By Subject Code
 
@@ -93,7 +93,9 @@ WHERE subject_code=?;
 def getStudentBySubjectCode():
     subjectCode = request.args.get('code')
     labels = ["studentNumber", "firstName", "lastName", "gender", "birthday", "subjectCode", "subjectName"]
-    return studentDBHandler(sql_get_student_by_subject_code, labels, [subjectCode])
+    return JsonifyQueryRecords(sql_get_student_by_subject_code, labels, [subjectCode])
+
+# 1.4 Student 
 
 
 # ==========================================
