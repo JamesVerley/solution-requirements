@@ -30,17 +30,7 @@ def create_table(conn, create_table_sql):
 # SQL Connector - 1. Student
 # ==========================================
 
-def generalDBHandler(sqlScript, variableData):
-    with sqlite3.connect('data.db') as dbconn_local:
-        try:
-            c = dbconn_local.cursor()
-            c.execute(sqlScript, variableData)
-            records = c.fetchall()
-            return jsonify(records)
-        except sqlite3.Error as e:
-            print(e)
-
-def studentDBHandler(sqlScript, variableData=[]):
+def studentDBHandler(sqlScript, labels, variableData=[]):
     students = []
     with sqlite3.connect('data.db') as dbconn_local:
         try:
@@ -50,12 +40,10 @@ def studentDBHandler(sqlScript, variableData=[]):
 
             for row in records:
                 student = {}
-                student["id"] = row[0]
-                student["student_number"] = row[1]
-                student["first_name"] = row[2]
-                student["last_name"] = row[3]
-                student["birthday"] = row[4]
-                student["gender"] = row[5]
+                labelCounter = 0
+                for label in labels:
+                    student[label] = row[labelCounter]
+                    labelCounter = labelCounter + 1
                 students.append(student)
             c.close()
             return jsonify(students)
@@ -70,7 +58,8 @@ sql_get_all_students = """
 
 @app.route('/get-all-students', methods=['GET'])
 def getAllStudents():
-    return studentDBHandler(sql_get_all_students)
+    labels = ["id", "student_number", "first_name", "last_name", "birthday", "gender"]
+    return studentDBHandler(sql_get_all_students, labels)
 
 # 1.2 Students - Get Student By ID
 
@@ -80,7 +69,8 @@ sql_get_student_by_id = """
 @app.route('/get-student-by-id', methods=['GET'])
 def getStudentById():
     studentId = request.args.get('id')
-    return studentDBHandler(sql_get_student_by_id, [studentId])
+    labels = ["id", "student_number", "first_name", "last_name", "birthday", "gender"]
+    return studentDBHandler(sql_get_student_by_id, labels, [studentId])
 
 # 1.3 Students - Get Student By Subject Code
 
@@ -102,7 +92,8 @@ WHERE subject_code=?;
 @app.route('/get-student-by-subject-code', methods=['GET'])
 def getStudentBySubjectCode():
     subjectCode = request.args.get('code')
-    return generalDBHandler(sql_get_student_by_subject_code, [subjectCode])
+    labels = ["studentNumber", "firstName", "lastName", "gender", "birthday", "subjectCode", "subjectName"]
+    return studentDBHandler(sql_get_student_by_subject_code, labels, [subjectCode])
 
 
 # ==========================================
