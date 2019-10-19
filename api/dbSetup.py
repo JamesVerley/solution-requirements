@@ -118,8 +118,8 @@ INSERT INTO "subject" VALUES (8, 'PED102', 'PE General', 'General PE Class');
 -- subject_periods
 -- ======================
 INSERT INTO "subject_periods" VALUES (1, '09:00', '10:00', 'Monday', 1);
-INSERT INTO "subject_periods" VALUES (2, '09:00', '10:00', 'Tuesday', 1);
-INSERT INTO "subject_periods" VALUES (3, '12:00', '13:00', 'Tuesday', 8);
+INSERT INTO "subject_periods" VALUES (2, '13:00', '14:00', 'Monday', 1);
+INSERT INTO "subject_periods" VALUES (3, '13:00', '14:00', 'Monday', 2);
 INSERT INTO "subject_periods" VALUES (4, '13:00', '14:00', 'Wednesday', 8);
 -- ======================
 -- allocation
@@ -141,9 +141,9 @@ INSERT INTO "criterion"("id", "allocation_id", "datatype", "name", "description"
 -- session
 -- ======================
 INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'19/2/2019',1, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'26/2/2019',2, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'5/3/2019',3, 1);
-INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'12/3/2019',4, 1);
+INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'19/2/2019',2, 1);
+INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'19/2/2019',3, 2);
+INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES (NULL,'26/2/2019',4, 1);
 -- ======================
 -- student
 -- ======================

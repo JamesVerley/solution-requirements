@@ -158,7 +158,7 @@ INSERT INTO "session"("id", "session_date", "period_id", "allocation_id") VALUES
 -- ======================
 INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('1', 'Christi', 'Bella', '12/1/2000', 'F');
 INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('2', 'Bob', 'Klar', '12/1/2000', 'F');
-INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('3', 'Christi', 'Bella', '12/1/2000', 'F');
+INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('3', 'Stella', 'Stone', '12/1/2000', 'F');
 INSERT INTO "student" ("student_number","first_name","last_name","birthday","gender") VALUES ('4', 'Mark', 'Credo', '1/3/2000', "M");
 -- ======================
 -- level

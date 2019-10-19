@@ -167,15 +167,50 @@ ORDER BY student.student_number
 ;
 """
 
+# ==========================================
+# SQL Connector - Session
+# ==========================================
+
+sql_get_sessions_by_subjectcode_date = """
+SELECT
+    session.id,
+	session.session_date,
+	subject.subject_code,
+	subject.subject_name,
+	subject_periods.day,
+	subject_periods.start_time,
+	subject_periods.end_time
+FROM
+	session
+	INNER JOIN subject_periods on session.period_id = subject_periods.id
+	INNER JOIN subject on subject_periods.subject_id = subject.id
+WHERE
+	subject_code=? AND
+	session_date=?
+;
+"""
+
+@app.route('/get-sessions-by-subjectcode-date', methods=['GET'])
+def getSessionsBySubjectCodeDate():
+    subjectCode = request.args.get('code')
+    sessionDate = request.args.get('date')
+    labels = ["sessionId", "sessionDate", "subjectCode", "subjectName", "day", "startTime", "endTime"]
+    return JsonifyQueryRecords(sql_get_sessions_by_subjectcode_date, labels, [subjectCode, sessionDate])
+
+
+# ==========================================
+# SQL Connector - Home and Default API
+# ==========================================
+
 @app.route('/', methods=['GET'])
 def getHomePage():
     return jsonify({"message":"ok"})
 
 @app.route('/<path:path>')
 def catch_all(path):
-    return jsonify({"message":"path not found"})
+    return jsonify({"message":"local path not found"})
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    # app.run(debug=True)
+    # port = int(os.environ.get('PORT', 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
