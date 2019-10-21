@@ -16,7 +16,7 @@ This repository contains the backend REST API code. We are also currently workin
 https://github.com/juntao-dev/student-record-helper-front
 ```
 
-[PLaceholder - System Design Diagram]
+[Placeholder - System Design Diagram]
 
 _Note: This project is built upon a previous student project that aims to provide student grading solution to school PE teachers. The original project files remain available at the `original-project` branch._
 
