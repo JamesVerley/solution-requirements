@@ -92,28 +92,92 @@ def getStudentBySubjectCode():
     return JsonifyQueryRecords(sql_get_student_by_subject_code, labels, [subjectCode])
 
 # 2.1 Subjects - get subjects (id and name) by student id
-# UNVERIFIED!!
+
 sql_get_subjects_using_student = """
 SELECT
-	subject.subject_id,
-	subject.subject_code,
-	subject.subject_name
+    subject.id,
+    subject.subject_code,
+    subject.subject_name,
+	subject.subject_description
 FROM
-	subject
-	INNER JOIN student ON student.id = student_id;
-	INNER JOIN registration ON student.id = registration.student_id;
-	INNER JOIN enrolment ON registration.id = enrolment.registration_id;
-	INNER JOIN subjects ON subjects.id = enrolment.subject_id;
+    student
+    INNER JOIN registration ON student.id = registration.student_id
+    INNER JOIN enrolment ON registration.id = enrolment.registration_id
+    INNER JOIN subject ON enrolment.subject_id = subject.id
 WHERE
-	student_id = ?;
+    student.id = ?;
 """
 
-@app.route('/getsubjects/usingstudent', methods=['GET'])
-def getStudentBySubjectCode():
-    studentCode = request.args.get('id')
-    labels = ["subjectCode", "subjectName"]
-    return JsonifyQueryRecords(sql_get_subjects_using_student, labels, [studentCode])
+@app.route('/getsubjectsbystudentid', methods=['GET'])
+def getSubjectsByStudentId():
+    studentId = request.args.get('id')
+    labels = ["subjectId", "subjectCode", "subjectName", "subjectDescription"]
+    return JsonifyQueryRecords(sql_get_subjects_using_student, labels, [studentId])
 
+# 2.2 Subjects - get subjects given a teacher id
+
+sql_get_subjects_using_teacher = """
+SELECT
+    subject.id,
+    subject.subject_code,
+    subject.subject_name,
+	subject.subject_description
+FROM
+    teacher
+    INNER JOIN allocation ON teacher.id = allocation.teacher_id
+    INNER JOIN subject ON allocation.subject_id = subject.id
+WHERE
+    teacher.id = ?;
+"""
+
+@app.route('/getsubjectsbyteacherid', methods=['GET'])
+def getSubjectsByTeacherId():
+    teacherId = request.args.get('id')
+    labels = ["subjectId", "subjectCode", "subjectName", "subjectDescription"]
+    return JsonifyQueryRecords(sql_get_subjects_using_teacher, labels, [teacherId])
+
+# 2.3 Subjects - get subjects given a yearlevel id
+
+sql_get_subjects_using_level = """
+SELECT
+    subject.id,
+    subject.subject_code,
+    subject.subject_name,
+	subject.subject_description
+FROM
+    level
+    INNER JOIN registration ON level.id = registration.level_id
+    INNER JOIN enrolment ON registration.id = enrolment.registration_id
+    INNER JOIN subject ON enrolment.subject_id = subject.id
+WHERE
+    level.id = ?;
+"""
+
+# 3.1 Criteria - get criteria given a subject
+
+sql_get_criteria_using_subject = """
+SELECT
+	criterion.id,
+	criterion.allocation_id,
+	criterion.datatype,
+	criterion.name,
+	criterion.description,
+	criterion.min,
+	criterion.max,
+	criterion.auxiliary
+FROM
+    subject
+    INNER JOIN allocation ON subject.id = allocation.subject_id
+    INNER JOIN criterion ON allocation.id = criterion.allocation_id
+WHERE
+    subject.id = ?;
+"""
+
+@app.route('/getcriteriabysubjectid', methods=['GET'])
+def getCriteriaBySubjectId():
+    subjectId = request.args.get('id')
+    labels = ["criterionId", "allocationId", "datatype", "name", "description", "min", "max", "auxiliary"]
+    return JsonifyQueryRecords(sql_get_criteria_using_subject, labels, [subjectId])
 
 # ==========================================
 # Step to grade students
