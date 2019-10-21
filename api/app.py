@@ -23,11 +23,11 @@ if os.path.exists('data.db'):
 sqlite3.connect('data.db')
 
 # ==========================================
-# SQL Connector - 1. Student
+# SQL Connector - 1. Jsonify query results
 # ==========================================
 
 def JsonifyQueryRecords(sqlScript, labels, variableData=[]):
-    students = []
+    labelled_records = [] # 
     with sqlite3.connect('data.db') as dbconn_local:
         try:
             c = dbconn_local.cursor()
@@ -35,14 +35,14 @@ def JsonifyQueryRecords(sqlScript, labels, variableData=[]):
             records = c.fetchall()
 
             for row in records:
-                student = {}
+                labelled_record = {}
                 labelCounter = 0
                 for label in labels:
-                    student[label] = row[labelCounter]
+                    labelled_record[label] = row[labelCounter]
                     labelCounter = labelCounter + 1
-                students.append(student)
+                labelled_records.append(labelled_record)
             c.close()
-            return jsonify(students)
+            return jsonify(labelled_records)
         except sqlite3.Error as e:
             print(e)
 
