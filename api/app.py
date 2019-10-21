@@ -27,7 +27,7 @@ sqlite3.connect('data.db')
 # ==========================================
 
 def JsonifyQueryRecords(sqlScript, labels, variableData=[]):
-    labelled_records = [] # 
+    labelled_records = []
     with sqlite3.connect('data.db') as dbconn_local:
         try:
             c = dbconn_local.cursor()
@@ -90,6 +90,30 @@ def getStudentBySubjectCode():
     subjectCode = request.args.get('code')
     labels = ["studentNumber", "firstName", "lastName", "gender", "birthday", "subjectCode", "subjectName"]
     return JsonifyQueryRecords(sql_get_student_by_subject_code, labels, [subjectCode])
+
+# 2.1 Subjects - get subjects (id and name) by student id
+# UNVERIFIED!!
+sql_get_subjects_using_student = """
+SELECT
+	subject.subject_id,
+	subject.subject_code,
+	subject.subject_name
+FROM
+	subject
+	INNER JOIN student ON student.id = student_id;
+	INNER JOIN registration ON student.id = registration.student_id;
+	INNER JOIN enrolment ON registration.id = enrolment.registration_id;
+	INNER JOIN subjects ON subjects.id = enrolment.subject_id;
+WHERE
+	student_id = ?;
+"""
+
+@app.route('/getsubjects/usingstudent', methods=['GET'])
+def getStudentBySubjectCode():
+    studentCode = request.args.get('id')
+    labels = ["subjectCode", "subjectName"]
+    return JsonifyQueryRecords(sql_get_subjects_using_student, labels, [studentCode])
+
 
 # ==========================================
 # Step to grade students
