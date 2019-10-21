@@ -28,6 +28,9 @@ URL [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 **Test API End Points**
 
+#### Heroku CI/CD app
+`https://student-record-helper-backend.herokuapp.com/`
+
 `http://127.0.0.1:5000/getallstudents`
 
 `http://127.0.0.1:5000/getstudents/usingyeargroup`
