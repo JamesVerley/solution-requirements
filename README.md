@@ -30,7 +30,9 @@ This demo project is currently under development. Tools that we are using includ
 - **Hosting:** Heroku App
 - **Data Storage:** SQLite
 
+### Database
 
+![Model](./api/SQL/student_helper.png "Data Model")
 
 ### API End Points
 
