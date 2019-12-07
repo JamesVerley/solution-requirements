@@ -10,4 +10,4 @@ SQL Model and Files Generated using Navicat.
 
 # API documentation
 
-[https://editor.swagger.io/?_ga=2.32390010.57160080.1575671260-1494781435.1571878083#]swagger.io
+[https://editor.swagger.io/?_ga=2.32390010.57160080.1575671260-1494781435.1571878083#](swagger.io)
