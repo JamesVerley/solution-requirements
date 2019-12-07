@@ -1,0 +1,736 @@
+swagger: "2.0"
+info:
+  description: "REST api for the student record helper platform"
+  version: "1.0.0"
+  title: "Student Record Helper"
+  termsOfService: "<insert github url>"
+  contact:
+    email: "verley.james.m@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "student-record.helper"
+basePath: "/v1"
+tags:
+- name: "student"
+  description: "requests to do with students"
+  externalDocs:
+    description: ""
+    url: "http://student-record.helper"
+- name: "subject"
+  description: "requests to do with subjects"
+  externalDocs:
+    description: ""
+    url: "http://student-record.helper"
+- name: "criterion"
+  description: "requests to do with criteria"
+  externalDocs:
+    description: ""
+    url: "http://student-record.helper"
+- name: "grade"
+  description: "requests to do with grades"
+  externalDocs:
+    description: ""
+    url: "http://student-record.helper"
+- name: "session"
+  description: "requests to do with sessions"
+  externalDocs:
+    description: ""
+    url: "http://student-record.helper"
+- name: "level"
+  description: "requests to do with levels"
+  externalDocs:
+    description: ""
+    url: "http://student-record.helper"
+- name: "teacher"
+  description: "requests to do with teachers"
+  externalDocs:
+    description: ""
+    url: "http://student-record.helper"
+schemes:
+- "https"
+- "http"
+paths:
+  /student:
+    post:
+      tags:
+      - "student"
+      summary: "Add a new student"
+      description: ""
+      operationId: "addstudent"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Student object that needs to be added to a year level"
+        required: true
+        schema:
+          $ref: "#/definitions/Student"
+      responses:
+        405:
+          description: "Invalid input"
+    put:
+      tags:
+      - "student"
+      summary: "Update an existing student"
+      description: ""
+      operationId: "updateStudent"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Student"
+      responses:
+        400:
+          description: "Student not found"
+        405:
+          description: "Validation exception"
+  /student/subjectid:
+    get:
+      tags:
+      - "student"
+      summary: "finds students by subject"
+      description: ""
+      operationId: "getStudentsBySubjectId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subjectid"
+        in: "query"
+        description: "id of the subject to find all students for"
+        required: true
+        type: "string"
+        # items:
+        #   type: "string"
+        #   enum:
+        #   - "available"
+        #   - "pending"
+        #   - "sold"
+        #  default: "available"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Student"
+        400:
+          description: "Invalid status value"
+  /student/level:
+    get:
+      tags:
+      - "student"
+      summary: "finds students by levelid"
+      description: ""
+      operationId: "getStudentsByLevelId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "levelid"
+        in: "query"
+        description: "id of the level to find all students for"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Student"
+        400:
+          description: "Invalid status value"
+  /subject/level:
+    get:
+      tags:
+      - "subject"
+      summary: "finds subjects by levelid"
+      description: ""
+      operationId: "getSubjectByLevelId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "levelid"
+        in: "query"
+        description: "id of the level to find all students for"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Subject"
+        400:
+          description: "Invalid status value"
+  /subject/subjectid:
+    put:
+      tags:
+      - "subject"
+      summary: "updates subject of subjectid"
+      description: ""
+      operationId: "updateSubjectWithId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subjectid"
+        in: "query"
+        description: "id of the subject to update"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid status value"
+  /subject:
+    post:
+      tags:
+      - "subject"
+      summary: "Add a new Subject"
+      description: ""
+      operationId: "addubject"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Subject object that needs to be added to a year level"
+        required: true
+        schema:
+          $ref: "#/definitions/Subject"
+      responses:
+        405:
+          description: "Invalid input"
+  /criterion/subjectid:
+    get:
+      tags:
+      - "criterion"
+      summary: "finds criteria by subject"
+      description: ""
+      operationId: "getPetsByStatus"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Criterion"
+        400:
+          description: "Invalid status value"
+  /criterion/criterionid:
+    put:
+      tags:
+      - "criterion"
+      summary: "updates criterion of criterionid"
+      description: ""
+      operationId: "updateCriterionWithId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "subjectid"
+        in: "query"
+        description: "id of the criterion to update"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid status value"  
+  /criterion:
+    post:
+      tags:
+      - "criterion"
+      summary: "Add a new Criterion"
+      description: ""
+      operationId: "addriterion"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Criterion object that needs to be added to a year level"
+        required: true
+        schema:
+          $ref: "#/definitions/Criterion"
+      responses:
+        405:
+          description: "Invalid input"
+  /grade/sessionid:
+    get:
+      tags:
+      - "grade"
+      summary: "finds grades by session"
+      description: ""
+      operationId: "getGradesBySessionId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Grade"
+        400:
+          description: "Invalid status value"
+          
+  /grade/gradeid:
+    put:
+      tags:
+      - "grade"
+      summary: "updates grade of gradeid"
+      description: ""
+      operationId: "updateGradeWithId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gradeid"
+        in: "query"
+        description: "id of the grade to update"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid status value"
+  /grade:
+    post:
+      tags:
+      - "grade"
+      summary: "Add a new Grade"
+      description: ""
+      operationId: "addrade"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Grade object that needs to be added to a year level"
+        required: true
+        schema:
+          $ref: "#/definitions/Grade"
+      responses:
+        405:
+          description: "Invalid input"
+  /session:
+    post:
+      tags:
+      - "session"
+      summary: "Add a new Session"
+      description: ""
+      operationId: "addession"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Session object that needs to be added to a year level"
+        required: true
+        schema:
+          $ref: "#/definitions/Session"
+      responses:
+        405:
+          description: "Invalid input"
+  /session/teacherid:
+    get:
+      tags:
+      - "session"
+      summary: "finds grades by session"
+      description: ""
+      operationId: "getSessionsByTeacherId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "teacherid"
+        in: "query"
+        description: "teacherid to query for sessions by"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Session"
+        400:
+          description: "Invalid status value"
+  /session/sessionid:
+    put:
+      tags:
+      - "session"
+      summary: "updates session of sessionid"
+      description: ""
+      operationId: "updateSessionWithId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "sessionid"
+        in: "query"
+        description: "id of the session to update"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid status value"
+  /level/year:
+    get:
+      tags:
+      - "level"
+      summary: "finds levels by year"
+      description: ""
+      operationId: "getLevelsByYear"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "year"
+        in: "query"
+        description: "year to query for levels by"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Level"
+        400:
+          description: "Invalid status value"
+  /level/levelid:
+    put:
+      tags:
+      - "level"
+      summary: "updates level of levelid"
+      description: ""
+      operationId: "updateLevelWithId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "levelid"
+        in: "query"
+        description: "id of the level to update"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid status value"
+  /level:
+    post:
+      tags:
+      - "level"
+      summary: "Add a new Level"
+      description: ""
+      operationId: "addevel"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Level object that needs to be added to a year level"
+        required: true
+        schema:
+          $ref: "#/definitions/Level"
+      responses:
+        405:
+          description: "Invalid input"
+  /teacher:
+    get:
+      tags:
+      - "teacher"
+      summary: "get all teacher names and emails (not passwords!)"
+      description: ""
+      operationId: "getTeacherDetails"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Teacher"
+        400:
+          description: "Invalid status value"
+    post:
+      tags:
+      - "teacher"
+      summary: "Add a new Teacher"
+      description: ""
+      operationId: "addeacher"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Teacher object that needs to be added to a year level"
+        required: true
+        schema:
+          $ref: "#/definitions/Teacher"
+      responses:
+        405:
+          description: "Invalid input"
+  /teacher/teacherid:
+    put:
+      tags:
+      - "teacher"
+      summary: "updates teacher of teacherid"
+      description: ""
+      operationId: "updateTeacherWithId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "teacherid"
+        in: "query"
+        description: "id of the teacher to update"
+        required: true
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid status value"
+definitions:
+  Student:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      student_number:
+        type: "string"
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+      brithdate:
+        type: "string"
+        format: "date-time"
+      gender:
+        type: "string"
+        #description: "Order Status"
+        enum:
+        - "male"
+        - "female"
+        - "anonymous"
+    xml:
+      name: "student"
+  Teacher:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      teacher_first_name:
+        type: "string"
+      teacher_last_name:
+        type: "string"
+      teacher_email:
+        type: "string"
+      teacher_password:
+        type: "string"
+    xml:
+      name: "teacher"
+  Subject:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      subject_code:
+        type: "string"
+      subject_name:
+        type: "string"
+      subject_description:
+        type: "string"
+    xml:
+      name: "subject"
+  Allocation:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      teacher_id:
+        type: "integer"
+      subject_name:
+        type: "string"
+      subject_description:
+        type: "string"
+    xml:
+      name: "allocation"
+  Session:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      session_date:
+        type: "string"
+        format: "date-time"
+      period_id:
+        type: "integer"
+      allocation_id:
+        type: "integer"
+    xml:
+      name: "session"
+  Criterion:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      allocation_id:
+        type: "integer"
+      datatype:
+        type: "string"
+      name:
+        type: "string"
+      description:
+        type: "string"
+      min:
+        type: "integer"
+      max:
+        type: "integer"
+      auxilliary:
+        type: "string"
+    xml:
+      name: "session"
+  Level:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      year_run:
+        type: "string"
+      year_level:
+        type: "string"
+    xml:
+      name: "session"
+  Registration:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      student_id:
+        type: "integer"
+      level_id:
+        type: "string"
+    xml:
+      name: "registration"
+  Enrolment:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      registration_id:
+        type: "integer"
+      subject_id:
+        type: "integer"
+    xml:
+      name: "enrolment"
+  Grade:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      enrolment_id:
+        type: "integer"
+      session_id:
+        type: "integer"
+      criteria_id:
+        type: "integer"
+      grade:
+        type: "string"
+    xml:
+      name: "enrolment"
+  Subject_periods:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      start_time:
+        type: "string"
+        format: "date-time"
+      end_time:
+        type: "string"
+        format: "date-time"
+      day:
+        type: "string"
+      subject_id:
+        type: "integer"
+#externalDocs:
+  #description: "Find out more about Swagger"
+  #url: "http://swagger.io"
